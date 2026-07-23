@@ -36,7 +36,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common.h"
 #include "libvfio-user.h"
+
+static int
+lspci_reset_cb(vfu_ctx_t *vfu_ctx UNUSED,
+               vfu_reset_type_t type UNUSED)
+{
+    return 0;
+}
 
 int main(void)
 {
@@ -60,6 +68,9 @@ int main(void)
                                         VFU_DEV_TYPE_PCI);
     if (vfu_ctx == NULL) {
         err(EXIT_FAILURE, "failed to create libvfio-user context");
+    }
+    if (vfu_setup_device_reset_cb(vfu_ctx, lspci_reset_cb) < 0) {
+        err(EXIT_FAILURE, "vfu_setup_device_reset_cb() failed");
     }
     if (vfu_pci_init(vfu_ctx, VFU_PCI_TYPE_EXPRESS,
                      PCI_HEADER_TYPE_NORMAL, 0) < 0) {
