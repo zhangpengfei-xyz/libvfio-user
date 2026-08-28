@@ -40,6 +40,16 @@ libvfio_user = library(
     install_rpath: rpathdir,
 )
 
+pkgconfig = import('pkgconfig')
+
+pkgconfig.generate(
+    libvfio_user,
+    filebase: 'vfio-user',
+    name: 'libvfio-user',
+    description: 'Library for implementing vfio-user devices',
+    version: meson.project_version(),
+)
+
 libvfio_user_dep = declare_dependency(
     link_with: libvfio_user,
     dependencies: libvfio_user_deps,
